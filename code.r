@@ -17,10 +17,10 @@ data_recipe <-
 # Step 3: Create a model specification
 xgb_spec <- 
   boost_tree(
-    mode = "regression",  # Change to "classification" for classification tasks
-    trees = 100,          # Number of trees (you can adjust this)
-    mtry = 10,            # Number of variables to sample at each split (you can adjust this)
-    learn_rate = 0.1      # Learning rate (you can adjust this)
+    mode = "classification",  # Classification mode
+    trees = 100,              # Number of trees (you can adjust this)
+    mtry = 10,                # Number of variables to sample at each split (you can adjust this)
+    learn_rate = 0.1          # Learning rate (you can adjust this)
   ) %>%
   set_engine("xgboost")
 
@@ -38,7 +38,7 @@ xgb_results <-
   fit_resamples(
     xgb_workflow, 
     resamples = cv,
-    metrics = metric_set(rmse, rsq)  # Add other metrics as needed
+    metrics = metric_set(roc_auc, accuracy)  # Classification metrics
   )
 
 # Step 7: Summarize the results
@@ -55,4 +55,4 @@ final_xgb_model <-
 # predictions <- predict(final_xgb_model, new_data)
 
 # Step 10: Optionally, save the final model for future use
-# saveRDS(final_xgb_model, "xgb_model.rds")
+# saveRDS(final_xgb_model, "xgb_classification_model.rds")
